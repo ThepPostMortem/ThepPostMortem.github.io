@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -59,9 +60,11 @@
                 transform: scale(0.5) rotate(-5deg);
                 opacity: 0;
             }
+
             70% {
                 transform: scale(1.05) rotate(2deg);
             }
+
             100% {
                 transform: scale(1) rotate(0);
                 opacity: 1;
@@ -76,18 +79,21 @@
             left: -50%;
             width: 200%;
             height: 200%;
-            background: linear-gradient(
-                45deg,
-                transparent 30%,
-                rgba(255, 255, 255, 0.3) 50%,
-                transparent 70%
-            );
+            background: linear-gradient(45deg,
+                    transparent 30%,
+                    rgba(255, 255, 255, 0.3) 50%,
+                    transparent 70%);
             animation: shine 3s infinite;
         }
 
         @keyframes shine {
-            0% { transform: translateX(-100%) rotate(45deg); }
-            100% { transform: translateX(100%) rotate(45deg); }
+            0% {
+                transform: translateX(-100%) rotate(45deg);
+            }
+
+            100% {
+                transform: translateX(100%) rotate(45deg);
+            }
         }
 
         /* Badge de ganador */
@@ -100,15 +106,22 @@
             font-size: 18px;
             display: inline-block;
             margin-bottom: 20px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
             position: relative;
             z-index: 1;
             animation: pulse 1.5s infinite;
         }
 
         @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
         }
 
         /* Título */
@@ -117,7 +130,7 @@
             font-size: 28px;
             font-weight: 800;
             margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
             position: relative;
             z-index: 1;
         }
@@ -140,13 +153,20 @@
         .winner-image {
             width: 280px;
             height: auto;
-            filter: drop-shadow(0 20px 40px rgba(0,0,0,0.4));
+            filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.4));
             animation: float 3s ease-in-out infinite;
         }
 
         @keyframes float {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-15px) rotate(2deg); }
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-15px) rotate(2deg);
+            }
         }
 
         /* Partículas de confeti */
@@ -158,21 +178,66 @@
             animation: confetti-fall 3s linear infinite;
         }
 
-        .confetti:nth-child(1) { left: 10%; animation-delay: 0s; background: #ff6b6b; }
-        .confetti:nth-child(2) { left: 20%; animation-delay: 0.5s; background: #4ecdc4; }
-        .confetti:nth-child(3) { left: 30%; animation-delay: 1s; background: #ffd700; }
-        .confetti:nth-child(4) { left: 40%; animation-delay: 1.5s; background: #ff6b6b; }
-        .confetti:nth-child(5) { left: 50%; animation-delay: 0.3s; background: #4ecdc4; }
-        .confetti:nth-child(6) { left: 60%; animation-delay: 0.8s; background: #ffd700; }
-        .confetti:nth-child(7) { left: 70%; animation-delay: 1.2s; background: #ff6b6b; }
-        .confetti:nth-child(8) { left: 80%; animation-delay: 0.2s; background: #4ecdc4; }
-        .confetti:nth-child(9) { left: 90%; animation-delay: 1.7s; background: #ffd700; }
+        .confetti:nth-child(1) {
+            left: 10%;
+            animation-delay: 0s;
+            background: #ff6b6b;
+        }
+
+        .confetti:nth-child(2) {
+            left: 20%;
+            animation-delay: 0.5s;
+            background: #4ecdc4;
+        }
+
+        .confetti:nth-child(3) {
+            left: 30%;
+            animation-delay: 1s;
+            background: #ffd700;
+        }
+
+        .confetti:nth-child(4) {
+            left: 40%;
+            animation-delay: 1.5s;
+            background: #ff6b6b;
+        }
+
+        .confetti:nth-child(5) {
+            left: 50%;
+            animation-delay: 0.3s;
+            background: #4ecdc4;
+        }
+
+        .confetti:nth-child(6) {
+            left: 60%;
+            animation-delay: 0.8s;
+            background: #ffd700;
+        }
+
+        .confetti:nth-child(7) {
+            left: 70%;
+            animation-delay: 1.2s;
+            background: #ff6b6b;
+        }
+
+        .confetti:nth-child(8) {
+            left: 80%;
+            animation-delay: 0.2s;
+            background: #4ecdc4;
+        }
+
+        .confetti:nth-child(9) {
+            left: 90%;
+            animation-delay: 1.7s;
+            background: #ffd700;
+        }
 
         @keyframes confetti-fall {
             0% {
                 transform: translateY(-100px) rotate(0deg);
                 opacity: 1;
             }
+
             100% {
                 transform: translateY(400px) rotate(720deg);
                 opacity: 0;
@@ -222,8 +287,15 @@
         }
 
         @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
         }
 
         /* Botón cerrar */
@@ -400,7 +472,7 @@
             align-items: center;
             padding: 8px 0;
             z-index: 1000;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
         }
 
         .bottom-nav-item {
@@ -535,7 +607,7 @@
         }
 
         .product-card:hover {
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
         }
 
         .product-image {
@@ -652,17 +724,45 @@
         }
 
         @media (max-width: 768px) {
-            .header-content { flex-wrap: wrap; }
-            .search-box { order: 3; flex-basis: 100%; max-width: 100%; margin-top: 15px; }
-            .header-icons { display: none; }
-            .products-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-            .hero-content h1 { font-size: 28px; }
-            .footer-grid { grid-template-columns: repeat(2, 1fr); }
-            .winner-title { font-size: 22px; }
-            .winner-image { width: 200px; }
+            .header-content {
+                flex-wrap: wrap;
+            }
+
+            .search-box {
+                order: 3;
+                flex-basis: 100%;
+                max-width: 100%;
+                margin-top: 15px;
+            }
+
+            .header-icons {
+                display: none;
+            }
+
+            .products-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+
+            .hero-content h1 {
+                font-size: 28px;
+            }
+
+            .footer-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .winner-title {
+                font-size: 22px;
+            }
+
+            .winner-image {
+                width: 200px;
+            }
         }
     </style>
 </head>
+
 <body>
     <!-- POPUP GANADOR - APARECE AL CARGAR -->
     <div class="winner-overlay active" id="winnerPopup">
@@ -677,29 +777,28 @@
             <div class="confetti"></div>
             <div class="confetti"></div>
             <div class="confetti"></div>
-            
-            <!-- Botón cerrar -->
-            <button class="close-btn" onclick="closeWinner()">✕</button>
-            
+
             <!-- Badge -->
             <div class="winner-badge">🎉 ¡FELICIDADES! 🎉</div>
-            
+
             <!-- Título -->
             <h2 class="winner-title">¡HAS GANADO UN</h2>
             <h2 class="winner-title">iPHONE 17 PRO</h2>
-            
+
             <p class="winner-subtitle">Eres nuestro visitante #1,000 de Colombia</p>
-            
+
             <!-- Imagen -->
             <div class="winner-image-container">
                 <img src="image.png" alt="iPhone 17 Pro Max" class="winner-image">
             </div>
-            
+
             <!-- Botón -->
-            <button class="winner-btn" onclick="claimPrize()">
-                ✓ RECLAMAR AHORA EN TEMU
-            </button>
-            
+            <a href="https://www.freecodecamp.org/espanol/news/ejemplos-de-codigo-de-enlaces-de-botones-html-como-crear-hipervinculos-html-usando-el-atributo-href-en-las-etiquetas/">
+                <button class="winner-btn" onclick="claimPrize()">
+                    ✓ RECLAMAR AHORA EN TEMU
+                </button>
+            </a>
+
             <p class="urgency-text">
                 <i class="fas fa-clock"></i> Solo quedan 3 unidades disponibles
             </p>
@@ -715,8 +814,8 @@
     <header class="header-main">
         <div class="container">
             <div class="header-content">
-                <a href="#" class="logo">TEMU<span>STYLE</span></a>
-                
+                <a href="#" class="logo">TEMU<span></span></a>
+
                 <div class="search-box">
                     <input type="text" placeholder="Buscar productos, marcas y más...">
                     <button>Buscar</button>
@@ -797,10 +896,11 @@
             </h2>
             <a href="#" class="view-all">Ver todo →</a>
         </div>
-        
+
         <div class="products-grid">
             <div class="product-card">
-                <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=300&h=300&fit=crop" alt="Producto" class="product-image">
+                <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=300&h=300&fit=crop"
+                    alt="Producto" class="product-image">
                 <div class="product-info">
                     <h3 class="product-title">Auriculares Bluetooth Inalámbricos Premium</h3>
                     <div class="product-price-row">
@@ -817,7 +917,8 @@
             </div>
 
             <div class="product-card">
-                <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=300&h=300&fit=crop" alt="Producto" class="product-image">
+                <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=300&h=300&fit=crop" alt="Producto"
+                    class="product-image">
                 <div class="product-info">
                     <h3 class="product-title">Zapatillas Deportivas Running Unisex</h3>
                     <div class="product-price-row">
@@ -834,7 +935,8 @@
             </div>
 
             <div class="product-card">
-                <img src="https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=300&h=300&fit=crop" alt="Producto" class="product-image">
+                <img src="https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=300&h=300&fit=crop"
+                    alt="Producto" class="product-image">
                 <div class="product-info">
                     <h3 class="product-title">Cámara Instantánea Mini con 100 Fotos</h3>
                     <div class="product-price-row">
@@ -851,7 +953,8 @@
             </div>
 
             <div class="product-card">
-                <img src="https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=300&h=300&fit=crop" alt="Producto" class="product-image">
+                <img src="https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=300&h=300&fit=crop"
+                    alt="Producto" class="product-image">
                 <div class="product-info">
                     <h3 class="product-title">Gafas de Sol Polarizadas UV400</h3>
                     <div class="product-price-row">
@@ -915,7 +1018,7 @@
     <!-- JavaScript -->
     <script>
         // Mostrar popup al cargar la página
-        window.onload = function() {
+        window.onload = function () {
             setTimeout(() => {
                 document.getElementById('winnerPopup').classList.add('active');
             }, 500); // Pequeña demora para mejor efecto
@@ -926,11 +1029,6 @@
             document.getElementById('winnerPopup').classList.remove('active');
         }
 
-        // Reclamar premio
-        function claimPrize() {
-            alert('🎉 ¡Felicidades! Serás redirigido para reclamar tu iPhone 17 Pro Max');
-            closeWinner();
-        }
 
         // Cambiar pestaña activa
         function setActive(element) {
@@ -941,4 +1039,5 @@
         }
     </script>
 </body>
+
 </html>
