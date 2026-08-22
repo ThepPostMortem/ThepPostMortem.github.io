@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Temu Style - Compra Smart</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            padding-bottom: 70px;
+        }
+
+        /* ===== POPUP GANADOR - OVERLAY ===== */
+        .winner-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .winner-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* ===== POPUP GANADOR - CONTENIDO ===== */
+        .winner-popup {
+            background: linear-gradient(135deg, #ff6b35 0%, #ff4757 50%, #ff6b35 100%);
+            border-radius: 24px;
+            padding: 40px;
+            max-width: 450px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+            animation: popIn 0.5s ease;
+            box-shadow: 0 25px 80px rgba(255, 107, 53, 0.5);
+            border: 3px solid #ffd700;
+        }
+
+        @keyframes popIn {
+            0% {
+                transform: scale(0.5) rotate(-5deg);
+                opacity: 0;
+            }
+            70% {
+                transform: scale(1.05) rotate(2deg);
+            }
+            100% {
+                transform: scale(1) rotate(0);
+                opacity: 1;
+            }
+        }
+
+        /* Efecto de brillo */
+        .winner-popup::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent 30%,
+                rgba(255, 255, 255, 0.3) 50%,
+                transparent 70%
+            );
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) rotate(45deg); }
+        }
+
+        /* Badge de ganador */
+        .winner-badge {
+            background: #ffd700;
+            color: #333;
+            padding: 10px 30px;
+            border-radius: 30px;
+            font-weight: 900;
+            font-size: 18px;
+            display: inline-block;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 1;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* Título */
+        .winner-title {
+            color: white;
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 1;
+        }
+
+        .winner-subtitle {
+            color: rgba(255, 255, 255, 0.95);
+            font-size: 16px;
+            margin-bottom: 25px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Imagen del iPhone */
+        .winner-image-container {
+            position: relative;
+            margin: 20px 0;
+            z-index: 1;
+        }
+
+        .winner-image {
+            width: 280px;
+            height: auto;
+            filter: drop-shadow(0 20px 40px rgba(0,0,0,0.4));
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(2deg); }
+        }
+
+        /* Partículas de confeti */
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #ffd700;
+            animation: confetti-fall 3s linear infinite;
+        }
+
+        .confetti:nth-child(1) { left: 10%; animation-delay: 0s; background: #ff6b6b; }
+        .confetti:nth-child(2) { left: 20%; animation-delay: 0.5s; background: #4ecdc4; }
+        .confetti:nth-child(3) { left: 30%; animation-delay: 1s; background: #ffd700; }
+        .confetti:nth-child(4) { left: 40%; animation-delay: 1.5s; background: #ff6b6b; }
+        .confetti:nth-child(5) { left: 50%; animation-delay: 0.3s; background: #4ecdc4; }
+        .confetti:nth-child(6) { left: 60%; animation-delay: 0.8s; background: #ffd700; }
+        .confetti:nth-child(7) { left: 70%; animation-delay: 1.2s; background: #ff6b6b; }
+        .confetti:nth-child(8) { left: 80%; animation-delay: 0.2s; background: #4ecdc4; }
+        .confetti:nth-child(9) { left: 90%; animation-delay: 1.7s; background: #ffd700; }
+
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100px) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(400px) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        /* Botón Aceptar */
+        .winner-btn {
+            background: linear-gradient(135deg, #00d26a 0%, #00b894 100%);
+            color: white;
+            border: none;
+            padding: 18px 60px;
+            border-radius: 50px;
+            font-size: 20px;
+            font-weight: 800;
+            cursor: pointer;
+            margin-top: 20px;
+            box-shadow: 0 10px 30px rgba(0, 210, 106, 0.4);
+            transition: all 0.3s;
+            position: relative;
+            z-index: 1;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .winner-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(0, 210, 106, 0.5);
+        }
+
+        .winner-btn:active {
+            transform: translateY(-1px) scale(1.02);
+        }
+
+        /* Texto de urgencia */
+        .urgency-text {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 13px;
+            margin-top: 15px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .urgency-text i {
+            color: #ffd700;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Botón cerrar */
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            transition: all 0.3s;
+            z-index: 2;
+        }
+
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+        }
+
+        /* ===== HEADER SUPERIOR ===== */
+        .header-top {
+            background: #ff6b35;
+            color: white;
+            text-align: center;
+            padding: 8px;
+            font-size: 14px;
+        }
+
+        /* ===== HEADER PRINCIPAL ===== */
+        .header-main {
+            background: white;
+            padding: 15px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 30px;
+        }
+
+        .logo {
+            font-size: 42px;
+            font-weight: 900;
+            color: #ff6b35;
+            letter-spacing: -2px;
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: #ff4757;
+        }
+
+        .search-box {
+            flex: 1;
+            max-width: 600px;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 14px 50px 14px 20px;
+            border: 2px solid #ff6b35;
+            border-radius: 30px;
+            font-size: 15px;
+            outline: none;
+        }
+
+        .search-box button {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #ff6b35;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .header-icons {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .header-icon {
+            text-align: center;
+            color: #333;
+            text-decoration: none;
+            font-size: 13px;
+            position: relative;
+        }
+
+        .header-icon i {
+            font-size: 24px;
+            display: block;
+            margin-bottom: 5px;
+            color: #666;
+        }
+
+        .cart-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #ff4757;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        /* ===== MENÚ DE CATEGORÍAS ===== */
+        .nav-categories {
+            background: white;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 10px 0;
+        }
+
+        .nav-list {
+            display: flex;
+            gap: 35px;
+            list-style: none;
+            overflow-x: auto;
+        }
+
+        .nav-list a {
+            color: #333;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            white-space: nowrap;
+            transition: color 0.3s;
+        }
+
+        .nav-list a:hover {
+            color: #ff6b35;
+        }
+
+        .nav-list .hot {
+            color: #ff4757;
+            font-weight: 700;
+        }
+
+        /* ===== NAVBAR INFERIOR ===== */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 8px 0;
+            z-index: 1000;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+        }
+
+        .bottom-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #999;
+            font-size: 12px;
+            padding: 5px 20px;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .bottom-nav-item i {
+            font-size: 24px;
+            margin-bottom: 4px;
+            transition: all 0.3s;
+        }
+
+        .bottom-nav-item.active {
+            color: #ff6b35;
+        }
+
+        .bottom-nav-item.active i {
+            color: #ff6b35;
+            transform: scale(1.1);
+        }
+
+        .bottom-nav-item .cart-badge {
+            position: absolute;
+            top: 2px;
+            right: 15px;
+            background: #ff4757;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        /* ===== BANNER PRINCIPAL ===== */
+        .hero-banner {
+            background: linear-gradient(135deg, #ff6b35 0%, #ff4757 100%);
+            margin: 20px;
+            border-radius: 16px;
+            padding: 60px;
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content h1 {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .hero-content p {
+            font-size: 20px;
+            margin-bottom: 30px;
+            opacity: 0.95;
+        }
+
+        .hero-btn {
+            background: white;
+            color: #ff6b35;
+            padding: 15px 40px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 16px;
+            display: inline-block;
+            transition: transform 0.3s;
+        }
+
+        .hero-btn:hover {
+            transform: scale(1.05);
+        }
+
+        /* ===== SECCIONES ===== */
+        .section {
+            background: white;
+            margin: 20px;
+            border-radius: 16px;
+            padding: 25px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title i {
+            color: #ff6b35;
+        }
+
+        .view-all {
+            color: #ff6b35;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .product-card {
+            border: 1px solid #f0f0f0;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: box-shadow 0.3s;
+            cursor: pointer;
+            background: white;
+        }
+
+        .product-card:hover {
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background: #f8f8f8;
+        }
+
+        .product-info {
+            padding: 15px;
+        }
+
+        .product-title {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 10px;
+            line-height: 1.4;
+            height: 40px;
+            overflow: hidden;
+        }
+
+        .product-price-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .current-price {
+            font-size: 22px;
+            font-weight: 800;
+            color: #ff4757;
+        }
+
+        .current-price span {
+            font-size: 14px;
+        }
+
+        .original-price {
+            font-size: 13px;
+            color: #999;
+            text-decoration: line-through;
+        }
+
+        .discount-badge {
+            background: #ff4757;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .product-rating {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .stars {
+            color: #ffc107;
+        }
+
+        .sold-count {
+            color: #999;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            background: #2c3e50;
+            color: white;
+            padding: 50px 20px 20px;
+            margin-top: 40px;
+            margin-bottom: 70px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-column h4 {
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column li {
+            margin-bottom: 12px;
+        }
+
+        .footer-column a {
+            color: #bdc3c7;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #34495e;
+            padding-top: 20px;
+            text-align: center;
+            color: #95a5a6;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .header-content { flex-wrap: wrap; }
+            .search-box { order: 3; flex-basis: 100%; max-width: 100%; margin-top: 15px; }
+            .header-icons { display: none; }
+            .products-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+            .hero-content h1 { font-size: 28px; }
+            .footer-grid { grid-template-columns: repeat(2, 1fr); }
+            .winner-title { font-size: 22px; }
+            .winner-image { width: 200px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- POPUP GANADOR - APARECE AL CARGAR -->
+    <div class="winner-overlay active" id="winnerPopup">
+        <div class="winner-popup">
+            <!-- Confeti animado -->
+            <div class="confetti"></div>
+            <div class="confetti"></div>
+            <div class="confetti"></div>
+            <div class="confetti"></div>
+            <div class="confetti"></div>
+            <div class="confetti"></div>
+            <div class="confetti"></div>
+            <div class="confetti"></div>
+            <div class="confetti"></div>
+            
+            <!-- Botón cerrar -->
+            <button class="close-btn" onclick="closeWinner()">✕</button>
+            
+            <!-- Badge -->
+            <div class="winner-badge">🎉 ¡FELICIDADES! 🎉</div>
+            
+            <!-- Título -->
+            <h2 class="winner-title">¡HAS GANADO UN</h2>
+            <h2 class="winner-title">iPHONE 17 PRO</h2>
+            
+            <p class="winner-subtitle">Eres nuestro visitante #1,000 de Colombia</p>
+            
+            <!-- Imagen -->
+            <div class="winner-image-container">
+                <img src="Img/image.png" alt="iPhone 17 Pro Max" class="winner-image">
+            </div>
+            
+            <!-- Botón -->
+            <button class="winner-btn" onclick="claimPrize()">
+                ✓ RECLAMAR AHORA EN TEMU
+            </button>
+            
+            <p class="urgency-text">
+                <i class="fas fa-clock"></i> Solo quedan 3 unidades disponibles
+            </p>
+        </div>
+    </div>
+
+    <!-- Header superior -->
+    <div class="header-top">
+        🚚 Envío GRATIS en tu primera orden | Descuentos de hasta 90% OFF
+    </div>
+
+    <!-- Header principal -->
+    <header class="header-main">
+        <div class="container">
+            <div class="header-content">
+                <a href="#" class="logo">TEMU<span>STYLE</span></a>
+                
+                <div class="search-box">
+                    <input type="text" placeholder="Buscar productos, marcas y más...">
+                    <button>Buscar</button>
+                </div>
+
+                <div class="header-icons">
+                    <a href="#" class="header-icon">
+                        <i class="fas fa-user"></i>
+                        Cuenta
+                    </a>
+                    <a href="#" class="header-icon">
+                        <i class="fas fa-bell"></i>
+                        Notificaciones
+                    </a>
+                    <a href="#" class="header-icon">
+                        <i class="fas fa-shopping-cart"></i>
+                        Carrito
+                        <span class="cart-badge">3</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Menú de categorías -->
+    <nav class="nav-categories">
+        <div class="container">
+            <ul class="nav-list">
+                <li><a href="#" class="hot">🔥 Ofertas Flash</a></li>
+                <li><a href="#">Moda Mujer</a></li>
+                <li><a href="#">Moda Hombre</a></li>
+                <li><a href="#">Electrónica</a></li>
+                <li><a href="#">Hogar & Jardín</a></li>
+                <li><a href="#">Belleza</a></li>
+                <li><a href="#">Zapatos</a></li>
+                <li><a href="#">Deportes</a></li>
+                <li><a href="#">Juguetes</a></li>
+                <li><a href="#">Automotriz</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- NAVBAR INFERIOR -->
+    <nav class="bottom-nav">
+        <a href="#" class="bottom-nav-item active" onclick="setActive(this)">
+            <i class="fas fa-house"></i>
+            <span>Inicio</span>
+        </a>
+        <a href="#" class="bottom-nav-item" onclick="setActive(this)">
+            <i class="fas fa-grid-2"></i>
+            <span>Categorías</span>
+        </a>
+        <a href="#" class="bottom-nav-item" onclick="setActive(this)">
+            <i class="fas fa-user"></i>
+            <span>Tú</span>
+        </a>
+        <a href="#" class="bottom-nav-item" onclick="setActive(this)">
+            <i class="fas fa-cart-shopping"></i>
+            <span>Carrito</span>
+            <span class="cart-badge">3</span>
+        </a>
+    </nav>
+
+    <!-- Resto del contenido... -->
+    <div class="hero-banner">
+        <div class="hero-content">
+            <h1>🛍️ LIQUIDACIÓN DE VERANO</h1>
+            <p>Hasta 70% de descuento en miles de productos</p>
+            <a href="#" class="hero-btn">Comprar Ahora</a>
+        </div>
+    </div>
+
+    <section class="section">
+        <div class="section-header">
+            <h2 class="section-title">
+                <i class="fas fa-fire"></i>
+                Productos Más Vendidos
+            </h2>
+            <a href="#" class="view-all">Ver todo →</a>
+        </div>
+        
+        <div class="products-grid">
+            <div class="product-card">
+                <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=300&h=300&fit=crop" alt="Producto" class="product-image">
+                <div class="product-info">
+                    <h3 class="product-title">Auriculares Bluetooth Inalámbricos Premium</h3>
+                    <div class="product-price-row">
+                        <span class="current-price">$12<span>.99</span></span>
+                        <span class="original-price">$45.99</span>
+                    </div>
+                    <span class="discount-badge">-72%</span>
+                    <div class="product-rating">
+                        <span class="stars">★★★★★</span>
+                        <span>(2.4k)</span>
+                    </div>
+                    <p class="sold-count">8.5k vendidos</p>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=300&h=300&fit=crop" alt="Producto" class="product-image">
+                <div class="product-info">
+                    <h3 class="product-title">Zapatillas Deportivas Running Unisex</h3>
+                    <div class="product-price-row">
+                        <span class="current-price">$24<span>.99</span></span>
+                        <span class="original-price">$89.99</span>
+                    </div>
+                    <span class="discount-badge">-72%</span>
+                    <div class="product-rating">
+                        <span class="stars">★★★★☆</span>
+                        <span>(1.8k)</span>
+                    </div>
+                    <p class="sold-count">5.2k vendidos</p>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <img src="https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=300&h=300&fit=crop" alt="Producto" class="product-image">
+                <div class="product-info">
+                    <h3 class="product-title">Cámara Instantánea Mini con 100 Fotos</h3>
+                    <div class="product-price-row">
+                        <span class="current-price">$18<span>.99</span></span>
+                        <span class="original-price">$59.99</span>
+                    </div>
+                    <span class="discount-badge">-68%</span>
+                    <div class="product-rating">
+                        <span class="stars">★★★★★</span>
+                        <span>(3.1k)</span>
+                    </div>
+                    <p class="sold-count">12k vendidos</p>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <img src="https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=300&h=300&fit=crop" alt="Producto" class="product-image">
+                <div class="product-info">
+                    <h3 class="product-title">Gafas de Sol Polarizadas UV400</h3>
+                    <div class="product-price-row">
+                        <span class="current-price">$8<span>.99</span></span>
+                        <span class="original-price">$29.99</span>
+                    </div>
+                    <span class="discount-badge">-70%</span>
+                    <div class="product-rating">
+                        <span class="stars">★★★★★</span>
+                        <span>(956)</span>
+                    </div>
+                    <p class="sold-count">3.8k vendidos</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-column">
+                    <h4>Sobre Nosotros</h4>
+                    <ul>
+                        <li><a href="#">Quiénes Somos</a></li>
+                        <li><a href="#">Trabaja con Nosotros</a></li>
+                        <li><a href="#">Blog</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Atención al Cliente</h4>
+                    <ul>
+                        <li><a href="#">Centro de Ayuda</a></li>
+                        <li><a href="#">Rastrear Pedido</a></li>
+                        <li><a href="#">Devoluciones</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Políticas</h4>
+                    <ul>
+                        <li><a href="#">Términos de Uso</a></li>
+                        <li><a href="#">Privacidad</a></li>
+                        <li><a href="#">Vendedores</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Síguenos</h4>
+                    <ul>
+                        <li><a href="#"><i class="fab fa-facebook"></i> Facebook</a></li>
+                        <li><a href="#"><i class="fab fa-instagram"></i> Instagram</a></li>
+                        <li><a href="#"><i class="fab fa-tiktok"></i> TikTok</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 TemuStyle. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // Mostrar popup al cargar la página
+        window.onload = function() {
+            setTimeout(() => {
+                document.getElementById('winnerPopup').classList.add('active');
+            }, 500); // Pequeña demora para mejor efecto
+        };
+
+        // Cerrar popup
+        function closeWinner() {
+            document.getElementById('winnerPopup').classList.remove('active');
+        }
+
+        // Reclamar premio
+        function claimPrize() {
+            alert('🎉 ¡Felicidades! Serás redirigido para reclamar tu iPhone 17 Pro Max');
+            closeWinner();
+        }
+
+        // Cambiar pestaña activa
+        function setActive(element) {
+            document.querySelectorAll('.bottom-nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            element.classList.add('active');
+        }
+    </script>
+</body>
+</html>
