@@ -78,7 +78,7 @@
     }
 
     function goToWhatsApp(message) {
-        const url = `https://wa.me/${3151611593}?text=${encodeURIComponent(message)}`;
+        const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
         window.open(url, '_blank');
     }
 
