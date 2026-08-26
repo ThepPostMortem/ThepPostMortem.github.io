@@ -2,7 +2,7 @@
     'use strict';
 
     // ----- CONFIGURACIÓN: NÚMERO DE WHATSAPP (cámbialo por el tuyo) -----
-    const WHATSAPP_NUMBER = '18001234567'; // con código de país, sin '+' ni espacios
+    const WHATSAPP_NUMBER = '573151611593'; // con código de país, sin '+' ni espacios
 
     // ----- Estado del carrito -----
     let cart = [];
