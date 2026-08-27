@@ -1,269 +1,750 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Ayudas Temu – Cupones, guías y herramientas</title>
-    <!-- Font Awesome 6 -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-    <!-- Estilos propios -->
-    <link rel="stylesheet" href="style.css" />
-</head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>🐠 Acuario TEMU – ¡Gana premios!</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, system-ui, -apple-system, sans-serif;
+        }
 
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(145deg, #0b1a2e 0%, #1a3a5c 100%);
+            padding: 20px;
+        }
+
+        /* ── Tarjeta principal ── */
+        .card {
+            max-width: 440px;
+            width: 100%;
+            background: linear-gradient(165deg, #1d4b6e 0%, #0f2c44 100%);
+            border-radius: 48px 48px 32px 32px;
+            padding: 24px 20px 32px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7), inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.2s ease;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: -60%;
+            left: -20%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(ellipse at 30% 20%, rgba(0, 200, 255, 0.08), transparent 70%);
+            pointer-events: none;
+        }
+
+        /* ── Encabezado ── */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .logo-temu {
+            font-size: 26px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: #fff;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .logo-temu span {
+            background: #ff4d4d;
+            padding: 2px 10px 2px 8px;
+            border-radius: 40px;
+            font-size: 14px;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: 0.3px;
+        }
+
+        .btn-login {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 8px 18px;
+            border-radius: 40px;
+            color: #fff;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: default;
+            transition: background 0.2s;
+            letter-spacing: 0.3px;
+        }
+
+        .btn-login:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* ── Título principal ── */
+        .title-main {
+            color: #fff;
+            font-size: 28px;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 4px;
+            position: relative;
+            z-index: 2;
+            text-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+        }
+
+        .title-main small {
+            font-size: 18px;
+            font-weight: 500;
+            opacity: 0.85;
+            display: block;
+            margin-top: 2px;
+        }
+
+        .sub-gratis {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 6px 0 12px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .cupon-gratis {
+            background: linear-gradient(135deg, #ffb347, #ff8c00);
+            padding: 4px 16px 4px 14px;
+            border-radius: 40px;
+            font-size: 18px;
+            font-weight: 800;
+            color: #1a1a2e;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 4px 14px rgba(255, 140, 0, 0.4);
+            letter-spacing: 0.5px;
+        }
+
+        .cupon-gratis small {
+            font-size: 13px;
+            font-weight: 600;
+            background: rgba(0, 0, 0, 0.15);
+            padding: 0 8px;
+            border-radius: 30px;
+            color: #fff;
+        }
+
+        .badge-porcentaje {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .badge-porcentaje .p {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(2px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 2px 10px;
+            border-radius: 40px;
+            font-size: 15px;
+            font-weight: 700;
+            color: #ffd966;
+            letter-spacing: 0.2px;
+        }
+
+        .badge-porcentaje .p:last-child {
+            background: linear-gradient(135deg, #ffd700, #ffaa00);
+            color: #1a1a2e;
+            border: none;
+            box-shadow: 0 2px 12px rgba(255, 215, 0, 0.3);
+        }
+
+        /* ── Tarjeta de progreso "Gana MX$0.01" ── */
+        .progress-card {
+            background: rgba(0, 0, 0, 0.25);
+            backdrop-filter: blur(4px);
+            border-radius: 28px;
+            padding: 18px 20px 16px;
+            margin: 10px 0 16px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            position: relative;
+            z-index: 2;
+        }
+
+        .progress-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .progress-label {
+            color: #b3d9ff;
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        .progress-label strong {
+            color: #fff;
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .progress-bar-bg {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 40px;
+            margin-top: 12px;
+            overflow: hidden;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 78%;
+            background: linear-gradient(90deg, #ffb347, #ff6b6b, #ff4080);
+            border-radius: 40px;
+            box-shadow: 0 0 16px rgba(255, 107, 107, 0.4);
+            transition: width 0.6s ease;
+        }
+
+        .progress-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .progress-footer span:last-child {
+            color: #ffd966;
+            font-weight: 600;
+        }
+
+        /* ── Botón ENTRAR (más arriba) ── */
+        .btn-entrar-wrapper {
+            margin: 12px 0 18px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .btn-entrar {
+            display: block;
+            width: 100%;
+            padding: 18px 0;
+            background: linear-gradient(135deg, #ff6b35, #f7931e);
+            border: none;
+            border-radius: 60px;
+            font-size: 26px;
+            font-weight: 800;
+            color: #fff;
+            text-align: center;
+            text-decoration: none;
+            letter-spacing: 2px;
+            box-shadow: 0 8px 28px rgba(247, 147, 30, 0.45);
+            transition: all 0.2s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+        }
+
+        .btn-entrar::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 40%, rgba(255, 255, 255, 0.15), transparent 60%);
+            pointer-events: none;
+        }
+
+        .btn-entrar:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 36px rgba(247, 147, 30, 0.6);
+        }
+
+        .btn-entrar:active {
+            transform: scale(0.97);
+        }
+
+        .btn-entrar small {
+            font-size: 16px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            opacity: 0.85;
+            display: block;
+            margin-top: -2px;
+        }
+
+        /* ── Grid de premios ── */
+        .premios-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin: 16px 0 14px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .premio-item {
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(2px);
+            border-radius: 20px;
+            padding: 12px 4px 10px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            transition: background 0.2s;
+        }
+
+        .premio-item .icon {
+            font-size: 28px;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .premio-item .valor {
+            font-size: 18px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .premio-item .label {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.5);
+            margin-top: 2px;
+        }
+
+        .premio-item.destacado {
+            background: linear-gradient(145deg, rgba(255, 215, 0, 0.15), rgba(255, 140, 0, 0.10));
+            border: 1px solid rgba(255, 215, 0, 0.2);
+        }
+
+        .premio-item.destacado .valor {
+            color: #ffd700;
+        }
+
+        /* ── Fila "Hasta 8 comidas más" ── */
+        .comidas-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 40px;
+            padding: 10px 18px 10px 22px;
+            margin: 4px 0 12px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            position: relative;
+            z-index: 2;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .comidas-row .left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #fff;
+            font-weight: 600;
+            font-size: 17px;
+        }
+
+        .comidas-row .left span {
+            background: #ff6b6b;
+            padding: 0 12px;
+            border-radius: 40px;
+            font-size: 14px;
+            color: #fff;
+        }
+
+        .comidas-row .porcentaje-extra {
+            color: #ffd966;
+            font-weight: 700;
+            font-size: 20px;
+            letter-spacing: 0.5px;
+        }
+
+        /* ── Amigos / referidos ── */
+        .amigos-section {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(0, 0, 0, 0.15);
+            border-radius: 40px;
+            padding: 10px 18px 10px 22px;
+            margin: 10px 0 14px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            position: relative;
+            z-index: 2;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .amigos-section .left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #fff;
+            font-weight: 500;
+            font-size: 15px;
+        }
+
+        .amigos-section .left .icono-amigos {
+            font-size: 26px;
+        }
+
+        .btn-amigos {
+            background: linear-gradient(135deg, #4ecdc4, #44b39d);
+            border: none;
+            padding: 6px 20px;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 15px;
+            color: #0b1a2e;
+            cursor: default;
+            box-shadow: 0 4px 14px rgba(78, 205, 196, 0.3);
+            transition: transform 0.15s;
+            letter-spacing: 0.3px;
+        }
+
+        .btn-amigos:hover {
+            transform: scale(1.02);
+        }
+
+        /* ── Acuario visual ── */
+        .acuario-visual {
+            background: linear-gradient(180deg, #0f2c44 0%, #1a5a7a 100%);
+            border-radius: 40px;
+            padding: 20px 16px 18px;
+            margin: 10px 0 14px;
+            position: relative;
+            z-index: 2;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: inset 0 4px 30px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            min-height: 90px;
+        }
+
+        .acuario-visual .peces {
+            font-size: 42px;
+            letter-spacing: 4px;
+            filter: drop-shadow(0 4px 12px rgba(0, 200, 255, 0.2));
+        }
+
+        .acuario-visual .info-comida {
+            color: #b3d9ff;
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .acuario-visual .info-comida .num {
+            background: rgba(255, 255, 255, 0.06);
+            padding: 4px 16px;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 18px;
+            color: #fff;
+        }
+
+        .acuario-visual .info-comida .num small {
+            font-size: 13px;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .acuario-visual .badge-manana {
+            background: rgba(255, 200, 0, 0.12);
+            border: 1px solid rgba(255, 200, 0, 0.15);
+            padding: 4px 18px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 15px;
+            color: #ffd966;
+        }
+
+        /* ── Temporizador ── */
+        .timer-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 40px;
+            padding: 8px 18px 8px 22px;
+            margin: 8px 0 16px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            position: relative;
+            z-index: 2;
+        }
+
+        .timer-row .reloj {
+            font-size: 24px;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: 2px;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .timer-row .etiqueta {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .timer-row .bono-easy {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            padding: 4px 16px;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 14px;
+            color: #fff;
+            box-shadow: 0 2px 12px rgba(238, 90, 36, 0.3);
+        }
+
+        /* ── Footer "Más beneficios en camino" ── */
+        .footer-beneficios {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 20px;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 14px;
+            font-weight: 500;
+            position: relative;
+            z-index: 2;
+            letter-spacing: 0.5px;
+        }
+
+        .footer-beneficios .peso {
+            font-size: 20px;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 480px) {
+            .card {
+                padding: 18px 14px 24px;
+                border-radius: 32px;
+            }
+            .title-main {
+                font-size: 22px;
+            }
+            .premios-grid {
+                gap: 6px;
+            }
+            .premio-item .valor {
+                font-size: 15px;
+            }
+            .comidas-row .left {
+                font-size: 14px;
+            }
+            .btn-entrar {
+                font-size: 22px;
+                padding: 16px 0;
+            }
+            .acuario-visual .peces {
+                font-size: 30px;
+            }
+            .timer-row .reloj {
+                font-size: 20px;
+            }
+        }
+
+        /* ── Animación sutil ── */
+        @keyframes float {
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-4px);
+            }
+        }
+
+        .acuario-visual .peces {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* ── Estrella decorativa ── */
+        .stars {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.03);
+            pointer-events: none;
+            z-index: 0;
+            line-height: 1.6;
+            letter-spacing: 4px;
+            user-select: none;
+        }
+    </style>
+</head>
 <body>
 
-    <!-- ===== HEADER ===== -->
-    <header>
-        <div class="container header-inner">
-            <div class="logo">
-                <i class="fas fa-gift"></i>
-                Ayudas<span>Temu</span>
-            </div>
-            <nav>
-                <a href="#productos">Productos</a>
-                <a href="#testimonios">Testimonios</a>
-                <a href="#contacto">Contacto</a>
-                <div class="nav-actions">
-                    <div class="cart-icon" id="cartIcon">
-                        <i class="fas fa-shopping-cart"></i>
-                        <span class="cart-badge" id="cartBadge">0</span>
-                    </div>
-                    <div class="nav-actions">
-                        <!-- Enlace al sistema de fichas en la carpeta credits -->
-                        <a href="credits/fichas.html" class="ficha-link" title="Sistema de fichas">
-                            <i class="fas fa-coins" style="color:#ff6b35;"></i>
-                            <span id="fichaCount">0</span>
-                        </a>
-                        <div class="cart-icon" id="cartIcon">
-                            <i class="fas fa-shopping-cart"></i>
-                            <span class="cart-badge" id="cartBadge">0</span>
-                        </div>
-                    </div>
-                </div>
-            </nav>
-        </div>
-    </header>
+    <div class="card">
 
-    <!-- ===== HERO ===== -->
-    <section class="hero">
-        <div class="container hero-grid">
-            <div class="hero-text">
-                <h1>Maximiza tu experiencia <span>Temu</span></h1>
-                <p>
-                    logra obtener el 100% de tus regalos ¡GRATIS! de Temu.
-                </p>
-                <a href="#productos" class="btn-temu">
-                    <i class="fas fa-bolt"></i> Ver ayudas
-                </a>
+        <!-- decoración -->
+        <div class="stars">✦ ✧ ✦ ✧ ✦</div>
+
+        <!-- HEADER -->
+        <div class="header">
+            <div class="logo-temu">
+                TEMU <span>🎯</span>
+            </div>
+            <div class="btn-login">Iniciar sesión</div>
+        </div>
+
+        <!-- Título -->
+        <div class="title-main">
+            🐠 Acuario TEMU
+            <small>¡Gira y gana premios increíbles!</small>
+        </div>
+
+        <!-- Cupón gratis + porcentajes -->
+        <div class="sub-gratis">
+            <div class="cupon-gratis">
+                🎁 GRATIS <small>CUPÓN</small>
+            </div>
+            <div class="badge-porcentaje">
+                <span class="p">40%</span>
+                <span class="p">60%</span>
+                <span class="p">80%</span>
+                <span class="p">99.99%</span>
             </div>
         </div>
-    </section>
 
-    <!-- ===== PRODUCTOS ===== -->
-    <section class="productos" id="productos">
-        <div class="container">
-            <h2 class="section-title">Usarios <span style="color:#ff6b35;">existentes</span></h2>
-            <p class="section-sub">
-                Recibiras ayudas de usuarios existentes, se ofrece 100% de garantia y efectividad. Ademas de atender
-                cualquier solicitud de reembolso con efecto inmediato
-            </p>
+        <!-- ⬆️ BOTÓN ENTRAR (movido más arriba) ⬆️ -->
+        <div class="btn-entrar-wrapper">
+            <a href="https://temu.com/s/ry5hjaACxlIXd" target="_blank" rel="noopener noreferrer" class="btn-entrar">
+                🚀 ENTRAR
+                <small>¡Reclama tus premios ahora!</small>
+            </a>
+        </div>
 
-            <div class="product-grid" id="productGrid">
-                <!-- Tarjeta 1 -->
-                <div class="product-card" data-id="1" data-name="15 usuarios existentes" data-price="8.000">
-                    <div class="product-image-wrapper">
-                        <img src="Img/15-users.png" alt="Cupón Diario" class="product-img" />
-                    </div>
-                    <span class="badge-popular">Más vendido</span>
-                    <h3>15 usuarios existentes</h3>
-                    <p>15 usuarios nuevos que se pueden usar en cualquier juego, regalos gratis, sombrero, carritos
-                        gratis.</p>
-                    <div class="product-price">$8.000 <small> ̶1̶5̶.̶0̶0̶0̶</small></div>
-                    <button class="btn-add add-to-cart">Añadir al carrito</button>
-                    <button class="btn-add btn-buy-now buy-now" data-id="1" data-name="15 usuarios existentes"
-                        data-price="8.000">
-                        <i class="fab fa-whatsapp"></i> Comprar ahora
-                    </button>
-                </div>
-
-                <!-- Tarjeta 2 -->
-                <div class="product-card" data-id="2" data-name="Guía de Trucos Pro" data-price="10.000">
-                    <div class="product-image-wrapper">
-                        <img src="Img/Nequi.png" alt="Guía de Trucos" class="product-img" />
-                    </div>
-                    <span class="badge-popular" id="counterBadge">
-                        <i class="fas fa-users" style="margin-right: 6px;"></i>
-                        <span id="counterNumber">54</span> personas han ganado hoy · <span id="todayDate"></span>
-                    </span>
-                    <h3>Juego de Nequi</h3>
-                    <p>Podras obtener hasta 15 ayudas para el juego de nequi y poder ganar tus premios.</p>
-                    <div class="product-price">$10.000 <small> ̶1̶5̶.̶0̶0̶0̶</small></div>
-                    <button class="btn-add add-to-cart">Añadir al carrito</button>
-                    <button class="btn-add btn-buy-now buy-now" data-id="2" data-name="Usuarios Nequi"
-                        data-price="10.000">
-                        <i class="fab fa-whatsapp"></i> Comprar ahora
-                    </button>
-                </div>
-
-                <!-- Tarjeta 3 -->
-                <div class="product-card" data-id="3" data-name="1.000 gotas granja" data-price="1.99">
-                    <div class="product-image-wrapper">
-                        <img src="Img/Fram-Bottel.png" alt="Extensión Ahorrador" class="product-img" />
-                    </div>
-                    <span class="badge-popular">Más popular</span>
-                    <h3>1.000 gotas de agua granja</h3>
-                    <p>Obtendras 1.000 en la granja de Temu</p>
-                    <div class="product-price">$8.000 <small> ̶5̶.̶0̶0̶0̶</small></div>
-                    <button class="btn-add add-to-cart">Añadir al carrito</button>
-                    <button class="btn-add btn-buy-now buy-now" data-id="3" data-name="Granja de Temu"
-                        data-price="8.000">
-                        <i class="fab fa-whatsapp"></i> Comprar ahora
-                    </button>
-                </div>
-
-                <!-- Tarjeta 4 -->
-                <div class="product-card" data-id="3" data-name="Cuenta mejorada" data-price="10.000">
-                    <div class="product-image-wrapper">
-                        <img src="Img/Boosted-accounts.png" alt="Boosted-accounts" class="product-img" />
-                    </div>
-                    <span class="badge-popular">Ultimas disponibles</span>
-                    <h3>Cuenta mejorada</h3>
-                    <p>Obtendras una cuenta de Temu mejorada, los beneficios son mayor facilidad en los
-                        juegos, prioridad en el envio y mas descuentos 
-                    </p>
-                    <div class="product-price">$10.000 <small> ̶20.̶0̶0̶0̶</small></div>
-                    <button class="btn-add add-to-cart">Añadir al carrito</button>
-                    <button class="btn-add btn-buy-now buy-now" data-id="3" data-name="Cuenta mejorada"
-                        data-price="10.000">
-                        <i class="fab fa-whatsapp"></i> Comprar ahora
-                    </button>
-                </div>
-
+        <!-- Grid de premios -->
+        <div class="premios-grid">
+            <div class="premio-item">
+                <span class="icon">🎁</span>
+                <div class="valor">40%</div>
+                <div class="label">Descuento</div>
+            </div>
+            <div class="premio-item">
+                <span class="icon">🍔</span>
+                <div class="valor">60%</div>
+                <div class="label">Comida</div>
+            </div>
+            <div class="premio-item destacado">
+                <span class="icon">👑</span>
+                <div class="valor">80%</div>
+                <div class="label">Oferta</div>
+            </div>
+            <div class="premio-item">
+                <span class="icon">⭐</span>
+                <div class="valor">99.99%</div>
+                <div class="label">Máximo</div>
             </div>
         </div>
-    </section>
 
-    <!-- ===== TESTIMONIOS ===== -->
-    <section class="testimonios" id="testimonios">
-        <div class="container">
-            <h2 class="section-title">Lo que dicen <span style="color:#ff6b35;">nuestros clientes</span></h2>
-            <p class="section-sub">Miles de usuarios ya están ahorrando con nuestras ayudas.</p>
+        <!-- Hasta 8 comidas más -->
+        <div class="comidas-row">
+            <div class="left">
+                🍽️ Hasta <span>8</span> comidas más
+            </div>
+            <div class="porcentaje-extra">99.84%</div>
+        </div>
 
-            <div class="testi-grid">
-                <div class="testi-card">
-                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i
-                        class="fas fa-star"></i><i class="fas fa-star"></i>
-                    <p>“El cupón diario me ahorró más de $15 en mi última compra. ¡Increíble!”</p>
-                    <div class="autor">— Laura G.</div>
-                </div>
-                <div class="testi-card">
-                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i
-                        class="fas fa-star"></i><i class="fas fa-star"></i>
-                    <p>“La guía de trucos me enseñó a combinar ofertas que nunca imaginé. Muy recomendada.”</p>
-                    <div class="autor">— Carlos R.</div>
-                </div>
-                <div class="testi-card">
-                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i
-                        class="fas fa-star"></i><i class="fas fa-star"></i>
-                    <p>“La extensión funciona de maravilla, ya no busco cupones manualmente.”</p>
-                    <div class="autor">— Sofía M.</div>
-                </div>
+        <!-- Acuario visual -->
+        <div class="acuario-visual">
+            <div class="peces">
+                🐠🐡🐟🐠🐡
+            </div>
+            <div class="info-comida">
+                <span>🍲 <span class="num">200<small>g</small></span></span>
+                <span>🥘 <span class="num">18</span> alimentos</span>
+                <span class="badge-manana">🌅 Mañana</span>
             </div>
         </div>
-    </section>
 
-    <!-- ===== CONTACTO ===== -->
-    <section class="contacto" id="contacto">
-        <div class="container contacto-grid">
-            <div class="contacto-info">
-                <h2>¿Necesitas ayuda personalizada?</h2>
-                <p>
-                    Escríbenos y te asesoraremos para que aproveches al máximo cada compra
-                    en Temu. Respondemos en menos de 24h.
-                </p>
-                <p><i class="fas fa-envelope" style="color:#ff6b35;"></i> hola@ayudastemu.com</p>
-                <p><i class="fab fa-whatsapp" style="color:#25d366;"></i> +1 800 123 4567 (WhatsApp)</p>
-            </div>
-            <div class="contacto-form">
-                <h3>Envíanos un mensaje</h3>
-                <form id="contactForm">
-                    <div class="form-group">
-                        <label for="nombre">Nombre</label>
-                        <input type="text" id="nombre" placeholder="Tu nombre" required />
-                    </div>
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" placeholder="tucorreo@ejemplo.com" required />
-                    </div>
-                    <div class="form-group">
-                        <label for="mensaje">Mensaje</label>
-                        <textarea id="mensaje" placeholder="Cuéntanos qué ayuda necesitas..." required></textarea>
-                    </div>
-                    <button type="submit" class="btn-enviar">Enviar mensaje</button>
-                </form>
-            </div>
+        <!-- Temporizador + Bono fácil -->
+        <div class="timer-row">
+            <span class="etiqueta">⏳ Tiempo</span>
+            <span class="reloj" id="timerDisplay">07:46:21</span>
+            <span class="bono-easy">⚡ Bono fácil</span>
         </div>
-    </section>
 
-    <!-- ===== FOOTER ===== -->
-    <footer>
-        <div class="container">
-            <div class="footer-grid">
-                <div>
-                    <h4>AyudasTemu</h4>
-                    <a href="#productos">Productos</a>
-                    <a href="#testimonios">Testimonios</a>
-                    <a href="#contacto">Contacto</a>
-                </div>
-                <div>
-                    <h4>Legal</h4>
-                    <a href="#">Términos y condiciones</a>
-                    <a href="#">Política de privacidad</a>
-                    <a href="#">Política de devoluciones</a>
-                </div>
-                <div>
-                    <h4>Síguenos</h4>
-                    <a href="#"><i class="fab fa-instagram"></i> Instagram</a>
-                    <a href="#"><i class="fab fa-youtube"></i> YouTube</a>
-                    <a href="#"><i class="fab fa-tiktok"></i> TikTok</a>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <i class="fas fa-heart"></i> Hecho con pasión para ahorradores de Temu &bull; 2026
-            </div>
+        <!-- Footer -->
+        <div class="footer-beneficios">
+            <span>✨ Más beneficios en camino</span>
+            <span class="peso">236g</span>
         </div>
-    </footer>
 
-    <!-- ===== MODAL CARRITO ===== -->
-    <div class="cart-modal" id="cartModal">
-        <div class="cart-content">
-            <span class="cart-close" id="cartClose">&times;</span>
-            <h2 style="margin-bottom:16px;">Tu carrito</h2>
-            <div id="cartItems">
-                <div class="cart-empty">🛒 Aún no hay productos.</div>
-            </div>
-            <div class="cart-total" id="cartTotal">Total: $0.00</div>
-            <button class="btn-temu btn-whatsapp" style="width:100%; margin-top:16px;" id="checkoutBtn">
-                <i class="fab fa-whatsapp"></i> Comprar por WhatsApp
-            </button>
-            <p style="font-size:0.8rem; color:#888; margin-top:12px; text-align:center;">
-                Al hacer clic, serás redirigido a WhatsApp para completar tu pedido.
-            </p>
-        </div>
     </div>
 
-    <!-- ===== WHATSAPP FLOATING BUTTON ===== -->
-    <a href="https://wa.me/573151611593?text=Hola%2C%20quiero%20m%C3%A1s%20informaci%C3%B3n%20sobre%20las%20ayudas%20para%20Temu"
-        class="whatsapp-float" target="_blank" rel="noopener">
-        <i class="fab fa-whatsapp"></i>
-    </a>
+    <script>
+        // ── Temporizador simple con cuenta regresiva (solo visual) ──
+        (function() {
+            const timerEl = document.getElementById('timerDisplay');
+            if (!timerEl) return;
 
-    <!-- ===== TOAST ===== -->
-    <div class="toast" id="toast">¡Producto añadido!</div>
+            // tiempo inicial: 07:46:21 → 7h 46m 21s = 27981 segundos
+            let totalSegundos = 7 * 3600 + 46 * 60 + 21;
 
-    <!-- JavaScript propio -->
-    <script src="script.js"></script>
+            function actualizarTemporizador() {
+                if (totalSegundos <= 0) {
+                    timerEl.textContent = '00:00:00';
+                    return;
+                }
+                const h = Math.floor(totalSegundos / 3600);
+                const m = Math.floor((totalSegundos % 3600) / 60);
+                const s = totalSegundos % 60;
+                timerEl.textContent =
+                    String(h).padStart(2, '0') + ':' +
+                    String(m).padStart(2, '0') + ':' +
+                    String(s).padStart(2, '0');
+                totalSegundos--;
+            }
+
+            actualizarTemporizador();
+            setInterval(actualizarTemporizador, 1000);
+        })();
+
+        // ── Pequeña interacción en el botón "Obtener Más" ──
+        document.querySelector('.btn-amigos')?.addEventListener('click', function(e) {
+            e.preventDefault();
+            this.textContent = '✓ ¡Invita!';
+            this.style.background = 'linear-gradient(135deg, #ffd700, #ffaa00)';
+            setTimeout(() => {
+                this.textContent = 'Obtener Más';
+                this.style.background = 'linear-gradient(135deg, #4ecdc4, #44b39d)';
+            }, 1500);
+        });
+    </script>
+
 </body>
-
 </html>
